@@ -301,45 +301,6 @@
       btnEnviar.textContent = 'Confirmar y Enviar';
     });
   });
-
-  // Detectar si viene desde la app con datos QR
-const urlParams = new URLSearchParams(window.location.search);
-const isApp = urlParams.get('app') === 'true';
-const encodedData = urlParams.get('data');
-
-if (isApp && encodedData) {
-  try {
-    const decoded = atob(encodedData); // Decodifica base64
-    const partes = decoded.split('\t'); // Divide por tabulaciones
-
-    if (partes.length === 7) {
-      const producto = {
-        OT: partes[0],
-        CodProd: partes[1],
-        DescProd: partes[2],
-        CantidadEntregar: partes[3],
-        Serial: partes[4],
-        FechaAsignacion: partes[5],
-        FechaEscaneo: new Date().toLocaleString(),
-        Estado: partes[6]
-      };
-
-      google.script.run
-        .withSuccessHandler(() => {
-          document.body.innerHTML = '<h2>✅ Datos registrados correctamente</h2>';
-        })
-        .withFailureHandler(err => {
-          document.body.innerHTML = '<h2>❌ Error al guardar: ' + err.message + '</h2>';
-        })
-        .guardarEnInventario([producto]); // ✅ Enviar como array
-    } else {
-      document.body.innerHTML = '<h2>❌ El QR no contiene los datos esperados.</h2>';
-    }
-  } catch (e) {
-    document.body.innerHTML = '<h2>❌ Error al decodificar los datos del QR.</h2>';
-  }
-}
-
   
 </script>
 </body>
